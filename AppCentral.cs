@@ -44,7 +44,7 @@ public class AppCentral
             if( currentStyle == null )
                 {
                     currentStyle = new GUIStyle( GUI.skin.box );
-                    currentStyle.normal.background = MakeTex( 2, 2, new Color( 0.3f, 0.3f, 0.3f, 0.8f ) );
+                    currentStyle.normal.background = MakeTex( 2, 2, new Color( 0.3f, 0.3f, 0.3f, 0.9f ) );
                 }
             if (windowOpen) {
                 windowWidth = Screen.width-windowPadding*2;
@@ -307,8 +307,12 @@ public class AppCentral
             Debug.Log("localizedPriceString: "+product.metadata.localizedPriceString);
             Debug.Log("localizedTitle: "+product.metadata.localizedTitle);
 
-            localizedTitle = product.metadata.localizedTitle;
-            localizedDescription = product.metadata.localizedDescription;
+            if(product.metadata.localizedTitle.Length>0){
+                localizedTitle = product.metadata.localizedTitle;
+            }
+            if(product.metadata.localizedDescription.Length>0){
+                localizedDescription = product.metadata.localizedDescription;
+            }
             localizedPriceString = product.metadata.localizedPriceString;
             windowOpen = true;
         }
