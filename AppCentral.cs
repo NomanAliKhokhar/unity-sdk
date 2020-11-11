@@ -29,14 +29,28 @@ public class AppCentral
     public class Purchaser : MonoBehaviour, IStoreListener
     {
 
-        private Rect windowRect = new Rect(100, 100, Screen.width-200, Screen.height/2);
+        private GUIStyle currentStyle = null;
+        private int windowPadding = Screen.width/10;
+        private int windowWidth;
+        private int windowHeight;
+        private Rect windowRect;
         public Boolean windowOpen = false;
         private String localizedPriceString = "Price";
+        private String localizedTitle = "Full Game";
+        private String localizedDescription = "Access all levels";
 
         void OnGUI()
         {
+            if( currentStyle == null )
+                {
+                    currentStyle = new GUIStyle( GUI.skin.box );
+                    currentStyle.normal.background = MakeTex( 2, 2, new Color( 0.3f, 0.3f, 0.3f, 0.8f ) );
+                }
             if (windowOpen) {
-                windowRect = GUI.ModalWindow(0, windowRect, DoMyWindow, "Subscription");
+                windowWidth = Screen.width-windowPadding*2;
+                windowHeight = Screen.height-windowPadding*2;
+                windowRect = new Rect(windowPadding, windowPadding, windowWidth , windowHeight);
+                GUI.ModalWindow(0, windowRect, DoMyWindow, "Subscription",currentStyle);
             }
         }
 
@@ -56,16 +70,16 @@ public class AppCentral
             GUIStyle myLabelStyle = new GUIStyle(GUI.skin.label);
             myLabelStyle.fontSize = 35;
             myLabelStyle.alignment = TextAnchor.UpperCenter;
-            GUI.Label(new Rect(100, Screen.height/2-600, Screen.width/2, 200), "Full Game\nAccess all levels",myLabelStyle);
-            GUI.Label(new Rect(100, Screen.height/2-400, Screen.width/2, 200), "Just "+localizedPriceString+"/month",myLabelStyle);
+            GUI.Label(new Rect(0, 100, windowWidth, 300),localizedTitle+"\n"+localizedDescription+"\n\nJust "+localizedPriceString+"/month", myLabelStyle);
 
-            if (GUI.Button(new Rect(50, Screen.height/2-100, 200, 50), "Terms",myButtonStyle))
+            int extraButtonsWidth = 200;
+            if (GUI.Button(new Rect(50, windowHeight-100, extraButtonsWidth, 50), "Terms",myButtonStyle))
             {
                 print("Terms");
                 Application.OpenURL("https://www.app-central.com/terms");
             }
 
-            if (GUI.Button(new Rect(300, Screen.height/2-100, 200, 50), "Restore",myButtonStyle))
+            if (GUI.Button(new Rect(windowWidth-extraButtonsWidth-50, windowHeight-100, extraButtonsWidth, 50), "Restore",myButtonStyle))
             {
                 print("Restore");
                 AppCentral.purchaser.RestorePurchases();
@@ -77,13 +91,28 @@ public class AppCentral
             GUIStyle purchaseButtonStyle = new GUIStyle(GUI.skin.button);
             purchaseButtonStyle.fontSize = 50;
 
-            if (GUI.Button(new Rect(90, Screen.height/2-350, Screen.width/2, 100), "Subscribe",purchaseButtonStyle))
+            int buttonWidth = 400;
+            if (GUI.Button(new Rect(windowWidth/2-buttonWidth/2, 300, buttonWidth, 100), "Subscribe",purchaseButtonStyle))
             {
                 print("Purchasing!");
                 AppCentral.purchaser.BuySubscription();
                 windowOpen = false;
             }
         }
+
+        
+        private Texture2D MakeTex( int width, int height, Color col )
+            {
+                Color[] pix = new Color[width * height];
+                for( int i = 0; i < pix.Length; ++i )
+                {
+                    pix[ i ] = col;
+                }
+                Texture2D result = new Texture2D( width, height );
+                result.SetPixels( pix );
+                result.Apply();
+                return result;
+            }
 
         private static IStoreController m_StoreController;          // The Unity Purchasing system.
         private static IExtensionProvider m_StoreExtensionProvider; // The store-specific Purchasing subsystems.
@@ -278,6 +307,8 @@ public class AppCentral
             Debug.Log("localizedPriceString: "+product.metadata.localizedPriceString);
             Debug.Log("localizedTitle: "+product.metadata.localizedTitle);
 
+            localizedTitle = product.metadata.localizedTitle;
+            localizedDescription = product.metadata.localizedDescription;
             localizedPriceString = product.metadata.localizedPriceString;
             windowOpen = true;
         }
