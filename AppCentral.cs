@@ -30,7 +30,6 @@ public class AppCentral
     {
 
         private GUIStyle currentStyle = null;
-        private int windowPadding = Screen.width/10;
         private int windowWidth;
         private int windowHeight;
         private Rect windowRect;
@@ -44,13 +43,13 @@ public class AppCentral
             if( currentStyle == null )
                 {
                     currentStyle = new GUIStyle( GUI.skin.box );
-                    currentStyle.normal.background = MakeTex( 2, 2, new Color( 0.3f, 0.3f, 0.3f, 0.9f ) );
+                    currentStyle.normal.background = MakeTex( 2, 2, new Color( 0.13f, 0.41f, 0.52f, 0.9f ) );
                 }
             if (windowOpen) {
-                windowWidth = Screen.width-windowPadding*2;
-                windowHeight = Screen.height-windowPadding*2;
-                windowRect = new Rect(windowPadding, windowPadding, windowWidth , windowHeight);
-                GUI.ModalWindow(0, windowRect, DoMyWindow, "Subscription",currentStyle);
+                windowWidth = 600;
+                windowHeight = 600;
+                windowRect = new Rect((Screen.width-windowWidth)/2, (Screen.height-windowHeight)/2, windowWidth , windowHeight);
+                GUI.ModalWindow(0, windowRect, DoMyWindow, "",currentStyle);
             }
         }
 
@@ -62,7 +61,7 @@ public class AppCentral
             Color color = Color.white;
             color.a = 0.0f;
             GUI.backgroundColor = color;
-            if (GUI.Button(new Rect(10, 25, 40, 40), "X", myButtonStyle))
+            if (GUI.Button(new Rect(10, 10, 40, 40), "X", myButtonStyle))
             {
                windowOpen = false;
             }
