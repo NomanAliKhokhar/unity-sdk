@@ -342,7 +342,8 @@ public class AppCentral
             else if (String.Equals(args.purchasedProduct.definition.id, kProductIDSubscription, StringComparison.Ordinal))
             {
                 Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-                // TODO: The subscription item has been successfully purchased, grant this to the player.
+                //The subscription item has been successfully purchased, grant this to the player.
+                PlayerPrefs.SetInt("purchased_subscription", 1);
             }
             // Or ... an unknown product has been purchased by this user. Fill in additional products here....
             else
@@ -356,6 +357,9 @@ public class AppCentral
             return PurchaseProcessingResult.Complete;
         }
 
+        public static Boolean isUserSubscribed(){
+            return 1 == PlayerPrefs.GetInt("purchased_subscription");
+        }
 
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
