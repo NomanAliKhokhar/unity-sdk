@@ -24,6 +24,10 @@ public class AppCentral
        AppCentral.purchaser.windowOpen = true;
     }
 
+    public static Boolean isUserSubscribed(){
+        return 1 == PlayerPrefs.GetInt("purchased_subscription");
+    }
+    
     //purchasing
     // Deriving the Purchaser class from IStoreListener enables it to receive messages from Unity Purchasing.
     public class Purchaser : MonoBehaviour, IStoreListener
@@ -355,10 +359,6 @@ public class AppCentral
             // to be reminded of this purchase at next app launch. Use PurchaseProcessingResult.Pending when still 
             // saving purchased products to the cloud, and when that save is delayed. 
             return PurchaseProcessingResult.Complete;
-        }
-
-        public static Boolean isUserSubscribed(){
-            return 1 == PlayerPrefs.GetInt("purchased_subscription");
         }
 
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
