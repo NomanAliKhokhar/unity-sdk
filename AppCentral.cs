@@ -20,11 +20,15 @@ public class AppCentral
 
     public static void ShowPaywall()
     {
-       Debug.Log("Show paywall");
-       AppCentral.purchaser.windowOpen = true;
+        if(AppCentral.IsUserSubscribed()){
+            Debug.Log("User already subscribed, not showing paywall");
+            return;
+        }
+        Debug.Log("Showing paywall");
+        AppCentral.purchaser.windowOpen = true;
     }
 
-    public static Boolean isUserSubscribed(){
+    public static Boolean IsUserSubscribed(){
         return 1 == PlayerPrefs.GetInt("purchased_subscription");
     }
     
@@ -317,7 +321,7 @@ public class AppCentral
                 localizedDescription = product.metadata.localizedDescription;
             }
             localizedPriceString = product.metadata.localizedPriceString;
-            windowOpen = true;
+            AppCentral.ShowPaywall();
         }
 
 
