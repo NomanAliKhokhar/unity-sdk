@@ -48,7 +48,7 @@ public class AppCentral
 
         void OnGUI()
         {
-            if( currentStyle == null )
+            if (currentStyle == null || currentStyle.normal.background == null)
                 {
                     currentStyle = new GUIStyle( GUI.skin.box );
                     currentStyle.normal.background = MakeTex( 2, 2, new Color( 0.13f, 0.41f, 0.52f, 0.9f ) );
