@@ -43,6 +43,7 @@ public class AppCentral
         private Rect windowRect;
         public Boolean windowOpen = false;
         private String localizedPriceString = "Price";
+        private Boolean priceReceived = false;
         private String localizedTitle = "Full Game";
         private String localizedDescription = "Access all levels";
 
@@ -57,11 +58,19 @@ public class AppCentral
                 windowWidth = 600;
                 windowHeight = 600;
                 windowRect = new Rect((Screen.width-windowWidth)/2, (Screen.height-windowHeight)/2, windowWidth , windowHeight);
-                GUI.ModalWindow(0, windowRect, DoMyWindow, "",currentStyle);
+                GUI.ModalWindow(0, windowRect, PopWindow, "",currentStyle);
             }
         }
 
-        void DoMyWindow(int windowID)
+        void PopWindow(int windowID){
+            if(priceReceived){
+                PaywallWindow(windowID);
+            }else{
+                ErrorWindow(windowID);
+            }
+        }
+
+        void PaywallWindow(int windowID)
         {
             GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
             myButtonStyle.fontSize = 35;
@@ -106,8 +115,36 @@ public class AppCentral
                 windowOpen = false;
             }
         }
+        void ErrorWindow(int windowID)
+        {
+            GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
+            myButtonStyle.fontSize = 35;
 
-        
+            Color color = Color.white;
+            color.a = 0.0f;
+            GUI.backgroundColor = color;
+            if (GUI.Button(new Rect(10, 10, 40, 40), "X", myButtonStyle))
+            {
+               windowOpen = false;
+            }
+
+            GUIStyle myLabelStyle = new GUIStyle(GUI.skin.label);
+            myLabelStyle.fontSize = 35;
+            myLabelStyle.alignment = TextAnchor.UpperCenter;
+            GUI.Label(new Rect(0, 100, windowWidth, 300),"Something went wrong :(\nMake sure your device can make purchases and try again.", myLabelStyle);
+
+            color.a = 1.0f;
+            GUI.backgroundColor = color;
+            GUIStyle purchaseButtonStyle = new GUIStyle(GUI.skin.button);
+            purchaseButtonStyle.fontSize = 50;
+
+            int buttonWidth = 400;
+            if (GUI.Button(new Rect(windowWidth/2-buttonWidth/2, 300, buttonWidth, 100), "OK",purchaseButtonStyle))
+            {
+                windowOpen = false;
+            }
+        }
+
         private Texture2D MakeTex( int width, int height, Color col )
             {
                 Color[] pix = new Color[width * height];
@@ -320,7 +357,11 @@ public class AppCentral
             if(product.metadata.localizedDescription.Length>0){
                 localizedDescription = product.metadata.localizedDescription;
             }
-            localizedPriceString = product.metadata.localizedPriceString;
+            if(product.metadata.localizedPriceString != null){
+                priceReceived = true;
+                localizedPriceString = product.metadata.localizedPriceString;
+            }
+            
             AppCentral.ShowPaywall();
         }
 
