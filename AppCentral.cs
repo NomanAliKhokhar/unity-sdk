@@ -12,10 +12,21 @@ public class AppCentral
         Purchaser.kProductNameAppleSubscription = productID;
         Purchaser.kProductIDSubscription = productID;
         Debug.Log("Init product "+productID);
-        UnityWebRequest.Get("https://vnc412s287.execute-api.us-east-1.amazonaws.com/default/unity-tracker?v=1&action=start&appid=" + Application.identifier).SendWebRequest();
+        String trackUrl = $"https://vnc412s287.execute-api.us-east-1.amazonaws.com/default/unity-tracker?v=2&action=start&appid={Application.identifier}&installID={AppCentral.GetInstallID()}";
+        UnityWebRequest.Get(trackUrl).SendWebRequest();
         
         AppCentral.purchaser = m.gameObject.AddComponent<Purchaser>() as Purchaser;
         AppCentral.purchaser.InitializePurchasing();
+    }
+
+    static String GetInstallID(){
+        String installIdKey = "install_id_key";
+        String installID = PlayerPrefs.GetString(installIdKey, "no_guid");
+        if(installID == "no_guid"){
+            installID = System.Guid.NewGuid().ToString();
+            PlayerPrefs.SetString(installIdKey, installID);
+        }
+        return installID;
     }
 
     public static void ShowPaywall()
