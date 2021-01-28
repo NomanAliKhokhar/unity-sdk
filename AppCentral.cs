@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using UnityEngine.iOS;
+
 public class AppCentral
 {
 
@@ -12,7 +14,7 @@ public class AppCentral
         Purchaser.kProductNameAppleSubscription = productID;
         Purchaser.kProductIDSubscription = productID;
         Debug.Log("Init product "+productID);
-        String trackUrl = $"https://vnc412s287.execute-api.us-east-1.amazonaws.com/default/unity-tracker?v=2&action=start&appid={Application.identifier}&installID={AppCentral.GetInstallID()}";
+        String trackUrl = $"https://vnc412s287.execute-api.us-east-1.amazonaws.com/default/unity-tracker?v=2&action=start&appid={Application.identifier}&installID={AppCentral.GetInstallID()}&idfa={Device.advertisingIdentifier}&idfv={Device.vendorIdentifier}";
         UnityWebRequest.Get(trackUrl).SendWebRequest();
         
         AppCentral.purchaser = m.gameObject.AddComponent<Purchaser>() as Purchaser;
