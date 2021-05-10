@@ -8,15 +8,19 @@ using UnityEngine.iOS;
 public class AppCentral
 {
 
-    public static Purchaser purchaser;
-    public static void Setup(MonoBehaviour m, String productID)
+     public static void TrackInstall()
     {
+        String trackUrl = $"https://vnc412s287.execute-api.us-east-1.amazonaws.com/default/unity-tracker?v=3&action=start&appid={Application.identifier}&installID={AppCentral.GetInstallID()}&idfa={Device.advertisingIdentifier}&idfv={Device.vendorIdentifier}";
+        UnityWebRequest.Get(trackUrl).SendWebRequest();
+    }
+
+    public static Purchaser purchaser;
+    public static void ShowPaywall(MonoBehaviour m, String productID)
+    {
+        AppCentral.TrackInstall();
         Purchaser.kProductNameAppleSubscription = productID;
         Purchaser.kProductIDSubscription = productID;
         Debug.Log("Init product "+productID);
-        String trackUrl = $"https://vnc412s287.execute-api.us-east-1.amazonaws.com/default/unity-tracker?v=2&action=start&appid={Application.identifier}&installID={AppCentral.GetInstallID()}&idfa={Device.advertisingIdentifier}&idfv={Device.vendorIdentifier}";
-        UnityWebRequest.Get(trackUrl).SendWebRequest();
-        
         AppCentral.purchaser = m.gameObject.AddComponent<Purchaser>() as Purchaser;
         AppCentral.purchaser.InitializePurchasing();
     }
